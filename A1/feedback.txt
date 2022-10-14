@@ -1,0 +1,5 @@
+Topic: CMPT 353, Name: Sunny, Comment: cmpt 353 is fun
+Topic: cars, Name: Kesha, Comment: I love driving
+Topic: car, Name: sunny, Comment: yoooo
+
+Topic: car, Name: s, Comment: hello

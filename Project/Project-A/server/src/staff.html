@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://kit.fontawesome.com/eedc30d8ce.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
+    <title>Saskatoon Blood Donation</title>
+</head>
+
+<body>
+    <header>
+        <div>
+            <h1>Saskatoon Blood Donation</h1>
+        </div>
+        <div>
+            <img src="../images/logo.png" alt="">
+        </div>
+    </header>
+    <div id="page">
+        <div id="menu">
+            <h2>Welcome user</h2>
+            <ul>
+                <li style="background-color: #DDFBFF;"><a href="/staff" style="color: black"><i
+                            class="fas fa-users"></i>Manage Staff</a></li>
+                <li><a href="/customer"><i class="fas fa-address-book"></i>Manage Customers</a></li>
+                <li><a href="/"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
+            </ul>
+        </div>
+        <div id="content">
+            <div id="register-form">
+                <h2>Register New Staff</h2>
+                <br>
+                <div>
+                    <div>
+                        <label for="fname">First Name</label>
+                        <br>
+                        <input type="text" name="fname" id="fname" required>
+                        <br>
+                    </div>
+
+                    <div>
+                        <label for="lname">Last Name</label>
+                        <br>
+                        <input type="text" name="lname" id="lname" required>
+                        <br>
+                    </div>
+
+                    <div>
+                        <label for="phone">Phone</label>
+                        <br>
+                        <input type="tel" name="phone" id="phone" required>
+                        <br>
+                    </div>
+
+                    <div>
+                        <label for="email">Email</label>
+                        <br>
+                        <input type="email" name="email" id="email" required>
+                        <br>
+                    </div>
+
+                    <div>
+                        <label for="username">Username</label>
+                        <br>
+                        <input type="text" name="username" id="username" required>
+                        <br>
+                    </div>
+
+                    <div>
+                        <label for="password">Password</label>
+                        <br>
+                        <input type="password" name="password" id="password" required>
+                        <br>
+                    </div>
+
+                    <div>
+                        <button onclick="registerStaff()">Register</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="list">
+                <h2>Staff List</h2>
+                <div id="container">
+                    <textarea name="data" id="data" cols="50" rows="30" readonly></textarea>
+                </div>
+            </div>
+
+            <div id="delete">
+                <h2>Delete Staff</h2>
+                <div>
+                    <label for="uname">Enter staff username</label>
+                    <br>
+                    <input type="text" name="uname" id="uname">
+                </div>
+                <div>
+                    <button onclick="deleteStaff()">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        function registerStaff() {
+            const http = new XMLHttpRequest();
+            const url = "/registerStaff";
+
+            http.open("POST", url, true);
+            http.setRequestHeader("Content-Type", "application/json");
+
+            let textarea = document.querySelector("#data");
+
+            http.onreadystatechange = function () {
+                if (http.readyState === 4 && http.status === 200) {
+                    let array = JSON.parse(http.responseText);
+                    let fname;
+                    let lname;
+                    let username;
+                    let phone;
+                    let email;
+
+                    textarea.innerHTML = "";
+
+                    for (i in array) {
+                        fname = array[i].fname;
+                        lname = array[i].lname;
+                        username = array[i].username;
+                        phone = array[i].phone;
+                        email = array[i].email;
+
+                        let employee = `Name: ${fname} ${lname}\nUsername: ${username}\nPhone: ${phone}\nEmail: ${email}\n\n`;
+                        textarea.innerHTML += employee;
+                    }
+                }
+            }
+
+            const staff = {
+                fname: `${document.querySelector("#fname").value}`,
+                lname: `${document.querySelector("#lname").value}`,
+                phone: `${document.querySelector("#phone").value}`,
+                email: `${document.querySelector("#email").value}`,
+                username: `${document.querySelector("#username").value}`,
+                password: `${document.querySelector("#password").value}`
+            }
+            http.send(JSON.stringify(staff));
+        }
+
+        function deleteStaff() {
+            const http = new XMLHttpRequest();
+            const url = "/deleteStaff";
+
+
+            http.open("POST", url, true);
+            http.setRequestHeader("Content-Type", "application/json");
+
+            let textarea = document.querySelector("#data");
+
+            http.onreadystatechange = function () {
+                if (http.readyState === 4 && http.status === 200) {
+                    let array = JSON.parse(http.responseText);
+                    let fname;
+                    let lname;
+                    let username;
+                    let phone;
+                    let email;
+
+                    textarea.innerHTML = "";
+
+                    for (i in array) {
+                        fname = array[i].fname;
+                        lname = array[i].lname;
+                        username = array[i].username;
+                        phone = array[i].phone;
+                        email = array[i].email;
+
+                        let employee = `Name: ${fname} ${lname}\nUsername: ${username}\nPhone: ${phone}\nEmail: ${email}\n\n`;
+                        textarea.innerHTML += employee;
+                    }
+                }
+            }
+
+            let json = {
+                username: `${document.querySelector('#uname').value}`
+            }
+            http.send(JSON.stringify(json));
+        }
+    </script>
+</body>
+
+</html>

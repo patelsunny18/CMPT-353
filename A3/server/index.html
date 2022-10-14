@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posting System</title>
+</head>
+
+<body>
+    <script type="text/javascript">
+        function createPost() {
+            let http = new XMLHttpRequest();
+            let url = "/createPost";
+            let textArea = document.querySelector('#recentPosts');
+            textArea.innerHTML = '';
+
+            let topic = `topic=${document.querySelector('#topic').value}`;
+            let data = `data=${document.querySelector('#data').value}`;
+            let sort = `sort=${document.querySelector('input[name="sort"]:checked').value}`;
+            let params = `${topic}&${data}&${sort}`;
+
+            http.open("POST", url, true);
+            http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            http.onreadystatechange = function () {
+                if (http.readyState === 4 && http.status === 200) {
+                    let array = JSON.parse(http.responseText);
+                    for (i in array) {
+                        let topic = array[i].topic;
+                        let data = array[i].data;
+                        let timestamp = array[i].timestamp;
+
+                        let post = `Topic: ${topic}\nData: ${data}\nTime created: ${timestamp}\n\n`;
+                        console.log(post);
+                        textArea.innerHTML += post;
+                    }
+                    alert("New post created!")
+                } else if (http.status !== 200) {
+                    alert("Uh no, something went wrong!");
+                }
+            }
+            http.send(params);
+        }
+    </script>
+
+    <label for="topic">Topic: </label>
+    <input type="text" name="topic" id="topic">
+
+    <br><br>
+
+    <label for="data">Data:</label>
+    <br>
+    <textarea name="data" id="data" cols="30" rows="10"></textarea>
+
+    <br><br>
+
+    <button onclick="createPost()" style="padding: 10px;">POST!</button>
+
+    <br><br>
+
+    <input type="radio" name="sort" id="topic-ascend" value="topic-ascend" checked=true>
+    <label for="topic-ascend">Topic (Ascending order)</label>
+    <br>
+
+    <input type="radio" name="sort" id="topic-descend" value="topic-descend">
+    <label for="topic-descend">Topic (Descending order)</label>
+    <br>
+
+    <input type="radio" name="sort" id="time-ascend" value="time-ascend">
+    <label for="time-ascend">Time (Ascending order)</label>
+    <br>
+
+    <input type="radio" name="sort" id="time-descend" value="time-descend">
+    <label for="time-descend">Time (Descending order)</label>
+
+
+    <br>
+    <br>
+
+    <label for="recentPosts">Recent Posts</label>
+    <br>
+    <textarea name="recentPosts" id="recentPosts" cols="50" rows="30"></textarea>
+</body>
+
+</html>

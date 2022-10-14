@@ -1,0 +1,5 @@
+CREATE TABLE posts(
+    -> topic VARCHAR(255) NOT NULL,
+    -> data TEXT NOT NULL,
+    -> timestamp DATETIME
+    -> );

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://kit.fontawesome.com/eedc30d8ce.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
+    <title>Saskatoon Blood Donation</title>
+</head>
+
+<body>
+    <header>
+        <div>
+            <h1>Saskatoon Blood Donation</h1>
+        </div>
+        <div>
+            <img src="../images/logo.png" alt="">
+        </div>
+    </header>
+    <div id="page">
+        <div id="menu">
+            <h2>Welcome user</h2>
+            <ul>
+                <li><a href="/staff"><i class="fas fa-users"></i>Manage Staff</a></li>
+                <li style="background-color: #DDFBFF;"><a href="/customer" style="color: black"><i
+                            class="fas fa-address-book"></i>Manage Customers</a></li>
+                <li><a href="/"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
+            </ul>
+        </div>
+        <div id="content">
+            <div id="register-form">
+                <h2>Register New Customer</h2>
+                <br>
+                <div>
+                    <div>
+                        <label for="fname">First Name</label>
+                        <br>
+                        <input type="text" name="fname" id="fname" required>
+                        <br>
+                    </div>
+
+                    <div>
+                        <label for="lname">Last Name</label>
+                        <br>
+                        <input type="text" name="lname" id="lname" required>
+                        <br>
+                    </div>
+
+                    <div>
+                        <label for="phone">Phone</label>
+                        <br>
+                        <input type="tel" name="phone" id="phone" required>
+                        <br>
+                    </div>
+                    <div>
+                        <label for="email">Email</label>
+                        <br>
+                        <input type="email" name="email" id="email" required>
+                        <br>
+                    </div>
+                    <div>
+                        <label for="dob">Date of Birth</label>
+                        <br>
+                        <input type="date" name="dob" id="dob" required>
+                        <br>
+                    </div>
+                    <div>
+                        <label for="blood_type">Blood Type</label>
+                        <br>
+                        <input type="text" id="blood_type" required>
+                    </div>
+                    <div>
+                        <button onclick="registerCustomer()">Register</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="list">
+                <h2>Customer List</h2>
+                <div id="container">
+                    <textarea name="data" id="data" cols="50" rows="30" readonly></textarea>
+                </div>
+            </div>
+            <div id="delete">
+                <h2>Delete Customer</h2>
+                <div>
+                    <label for="mail">Enter customer email</label>
+                    <br>
+                    <input type="text" name="mail" id="mail">
+                </div>
+                <div>
+                    <button onclick="deleteCustomer()">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        function registerCustomer() {
+            const http = new XMLHttpRequest();
+            const url = "/registerCustomer";
+
+            http.open("POST", url, true);
+            http.setRequestHeader("Content-Type", "application/json");
+
+            let textarea = document.querySelector("#data");
+            http.onreadystatechange = function () {
+                if (http.readyState === 4 && http.status === 200) {
+                    let array = JSON.parse(http.responseText);
+                    let fname, lname, phone, email, dob, blood_type;
+                    textarea.innerHTML = "";
+
+                    for (i in array) {
+                        fname = array[i].fname;
+                        lname = array[i].lname;
+                        phone = array[i].phone;
+                        email = array[i].email;
+                        dob = array[i].dob;
+                        blood_type = array[i].blood_type;
+
+                        let customer = `Name: ${fname} ${lname}\nPhone: ${phone}\nEmail: ${email}\nDate of Birth: ${dob}\nBlood Type: ${blood_type}\n\n`;
+                        textarea.innerHTML += customer;
+                    }
+                }
+            }
+
+            const customer = {
+                fname: `${document.querySelector("#fname").value}`,
+                lname: `${document.querySelector("#lname").value}`,
+                phone: `${document.querySelector("#phone").value}`,
+                email: `${document.querySelector("#email").value}`,
+                dob: `${document.querySelector('#dob').value}`,
+                blood_type: `${document.querySelector('#blood_type').value}`
+            }
+            console.log(customer);
+            http.send(JSON.stringify(customer));
+        }
+
+        function deleteCustomer() {
+            const http = new XMLHttpRequest();
+            const url = "/deleteCustomer";
+
+            http.open("POST", url, true);
+            http.setRequestHeader("Content-Type", "application/json");
+
+            let textarea = document.querySelector("#data");
+            http.onreadystatechange = function () {
+                if (http.readyState === 4 && http.status === 200) {
+                    let array = JSON.parse(http.responseText);
+                    let fname, lname, phone, email, dob, blood_type;
+                    textarea.innerHTML = "";
+
+                    for (i in array) {
+                        fname = array[i].fname;
+                        lname = array[i].lname;
+                        phone = array[i].phone;
+                        email = array[i].email;
+                        dob = array[i].dob;
+                        blood_type = array[i].blood_type;
+
+                        let customer = `Name: ${fname} ${lname}\nPhone: ${phone}\nEmail: ${email}\nDate of Birth: ${dob}\nBlood Type: ${blood_type}\n\n`;
+                        textarea.innerHTML += customer;
+                    }
+                }
+            }
+
+            let json = {
+                email: `${document.querySelector('#mail').value}`
+            }
+            http.send(JSON.stringify(json));
+        }
+    </script>
+</body>
+
+</html>
